@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>a472ac08-5efb-480f-935c-c183143b0ea6</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>RestSharp.Portable.Socks</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ISocksWebProxy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ITcpClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ITcpClientFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NonDisposableStream.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OpenConnection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OpenConnectionKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OpenConnectionKeyComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4A\Client.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4A\HttpSocks4aMessageHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4A\Messages\ConnectRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4A\Messages\ConnectResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4A\Messages\Message.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4A\Messages\Reponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4A\Messages\Request.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4A\Socks4aHttpClientFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\Client.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\ConnectStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\HttpSocks4MessageHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\Messages\ConnectRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\Messages\ConnectResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\Messages\Message.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\Messages\Reponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\Messages\Request.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\Socks4ConnectException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\Socks4HttpClientFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks4\Socks4WebProxy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\AuthenticationMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Client.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\ConnectStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\HttpSocks5MessageHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Messages\Authentication\PlainAuthenticationRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Messages\Authentication\PlainAuthenticationResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Messages\ConnectRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Messages\ConnectResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Messages\Message.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Messages\Reponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Messages\Request.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Messages\SelectMethodRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Messages\SelectMethodResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Socks5ConnectException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Socks5HttpClientFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socks5\Socks5WebProxy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SocksAddress.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SocksAddressComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SocksAuthenticationException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SocksException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SocksUtilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SocksVersion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TaskExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TcpClientMessageHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TcpClientPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TcpClientPoolFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TcpClientStream.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TcpResponseMessage.cs" />
+  </ItemGroup>
+</Project>
