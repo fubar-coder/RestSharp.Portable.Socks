@@ -23,7 +23,7 @@ namespace RestSharp.Portable.Socks.Socks5
 
         public bool IsBypassed(Uri host)
         {
-            return Dns.GetHostAddresses(host.Host).Any(IPAddress.IsLoopback);
+            return SocksUtilities.IsLoopBack(host.Host);
         }
 
         public ICredentials Credentials { get; set; }

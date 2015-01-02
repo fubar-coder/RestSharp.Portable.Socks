@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+#if WINRT
+using Windows.Networking;
+#endif
 
 namespace RestSharp.Portable.Socks
 {
@@ -8,23 +11,11 @@ namespace RestSharp.Portable.Socks
     {
         private readonly byte[] _invalidSocksAddressV4 = new byte[] {0, 0, 0, 1};
 
-        private IPEndPoint _endPoint;
-
-        public UriHostNameType HostNameType { get; private set; }
+        public EndPointType HostNameType { get; private set; }
 
         public string Host { get; private set; }
 
         public int Port { get; private set; }
-
-        public IPEndPoint EndPoint
-        {
-            get
-            {
-                if (HostNameType != UriHostNameType.IPv4 && HostNameType != UriHostNameType.IPv6)
-                    throw new InvalidOperationException();
-                return _endPoint;
-            }
-        }
 
         public SocksAddress(BinaryReader reader, Version version)
         {
@@ -39,7 +30,7 @@ namespace RestSharp.Portable.Socks
         }
 
         public SocksAddress(Uri uri)
-            : this(uri.HostNameType, uri.Host, uri.Port)
+            : this(uri.GetHostNameType(), uri.Host, uri.Port)
         {
         }
 
@@ -49,47 +40,45 @@ namespace RestSharp.Portable.Socks
             
         }
 
+#if WINRT
+        public SocksAddress(HostName address, int port)
+        {
+            Port = port;
+            Host = address.ToString();
+            HostNameType = address.GetHostNameType();
+        }
+#else
         public SocksAddress(IPAddress address, int port)
         {
             Port = port;
             Host = address.ToString();
-            _endPoint = new IPEndPoint(address, port);
             HostNameType = SocksUtilities.GetHostNameType(address);
         }
+#endif
 
+#if !WINRT
         public SocksAddress(IPEndPoint endPoint)
         {
             Port = endPoint.Port;
             Host = endPoint.Address.ToString();
-            _endPoint = endPoint;
             HostNameType = SocksUtilities.GetHostNameType(endPoint.Address);
         }
+#endif
 
-        private SocksAddress(UriHostNameType hostNameType, string host, int port)
+        private SocksAddress(EndPointType hostNameType, string host, int port)
         {
             Host = host;
             Port = port;
-            switch (hostNameType)
-            {
-                case UriHostNameType.IPv4:
-                case UriHostNameType.IPv6:
-                    _endPoint = new IPEndPoint(IPAddress.Parse(host), port);
-                    break;
-                default:
-                    hostNameType = UriHostNameType.Basic;
-                    break;
-            }
             HostNameType = hostNameType;
         }
 
         public void WriteToV4(BinaryWriter writer)
         {
-            var port = IPAddress.HostToNetworkOrder(unchecked((short)Port));
-            writer.Write(port);
+            WritePort(writer, Port);
             switch (HostNameType)
             {
-                case UriHostNameType.IPv4:
-                    writer.Write(EndPoint.Address.GetAddressBytes());
+                case EndPointType.IPv4:
+                    writer.Write(this.GetIpAddressBytes());
                     break;
                 default:
                     throw new NotSupportedException();
@@ -98,14 +87,13 @@ namespace RestSharp.Portable.Socks
 
         public void WriteToV4A(BinaryWriter writer)
         {
-            var port = IPAddress.HostToNetworkOrder(unchecked((short)Port));
-            writer.Write(port);
+            WritePort(writer, Port);
             switch (HostNameType)
             {
-                case UriHostNameType.IPv4:
-                    writer.Write(EndPoint.Address.GetAddressBytes());
+                case EndPointType.IPv4:
+                    writer.Write(this.GetIpAddressBytes());
                     break;
-                case UriHostNameType.IPv6:
+                case EndPointType.IPv6:
                     throw new NotSupportedException();
                 default:
                     writer.Write(_invalidSocksAddressV4);
@@ -117,13 +105,13 @@ namespace RestSharp.Portable.Socks
         {
             switch (HostNameType)
             {
-                case UriHostNameType.IPv4:
+                case EndPointType.IPv4:
                     writer.Write((byte) 1);
-                    writer.Write(EndPoint.Address.GetAddressBytes());
+                    writer.Write(this.GetIpAddressBytes());
                     break;
-                case UriHostNameType.IPv6:
+                case EndPointType.IPv6:
                     writer.Write((byte) 4);
-                    writer.Write(EndPoint.Address.GetAddressBytes());
+                    writer.Write(this.GetIpAddressBytes());
                     break;
                 default:
                 {
@@ -134,50 +122,60 @@ namespace RestSharp.Portable.Socks
                     break;
                 }
             }
-            var port = IPAddress.HostToNetworkOrder(unchecked((short) Port));
-            writer.Write(port);
+            WritePort(writer, Port);
+        }
+
+        private static void WritePort(BinaryWriter writer, int port)
+        {
+            var portBytes = BitConverter.GetBytes(unchecked((short)port));
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(portBytes);
+            writer.Write(portBytes);
+        }
+
+        private static int ReadPort(BinaryReader reader)
+        {
+            var portBytes = reader.ReadBytes(2);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(portBytes);
+            return BitConverter.ToUInt16(portBytes, 0);
         }
 
         public void ReadFromV4(BinaryReader reader)
         {
-            Port = unchecked((ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16()));
+            Port = ReadPort(reader);
             // IPv4
-            HostNameType = UriHostNameType.IPv4;
-            var address = new IPAddress(reader.ReadBytes(4));
-            Host = address.ToString();
-            _endPoint = new IPEndPoint(address, Port);
+            HostNameType = EndPointType.IPv4;
+            Host = SocksUtilities.GetIPv4ForBytes(reader.ReadBytes(4));
         }
 
         public void ReadFromV5(BinaryReader reader)
         {
-            IPAddress address;
             var hostNameType = reader.ReadByte();
             switch (hostNameType)
             {
                 case 1:
                     // IPv4
-                    HostNameType = UriHostNameType.IPv4;
-                    address = new IPAddress(reader.ReadBytes(4));
+                    HostNameType = EndPointType.IPv4;
+                    Host = SocksUtilities.GetIPv4ForBytes(reader.ReadBytes(4));
                     break;
                 case 3:
                     // Host name
-                    HostNameType = UriHostNameType.Basic;
-                    address = null;
-                    Host = SocksUtilities.DefaultEncoding.GetString(reader.ReadBytes(reader.ReadByte()));
+                    HostNameType = EndPointType.HostName;
+                    {
+                        var data = reader.ReadBytes(reader.ReadByte());
+                        Host = SocksUtilities.DefaultEncoding.GetString(data, 0, data.Length);
+                    }
                     break;
                 case 4:
                     // IPv6
-                    HostNameType = UriHostNameType.IPv6;
-                    address = new IPAddress(reader.ReadBytes(16));
+                    HostNameType = EndPointType.IPv6;
+                    Host = SocksUtilities.GetIPv6ForBytes(reader.ReadBytes(16));
                     break;
                 default:
                     throw new NotSupportedException();
             }
-            Port = unchecked ((ushort) IPAddress.NetworkToHostOrder(reader.ReadInt16()));
-            if (address == null) 
-                return;
-            Host = address.ToString();
-            _endPoint = new IPEndPoint(address, Port);
+            Port = ReadPort(reader);
         }
 
         public Uri ToUri()

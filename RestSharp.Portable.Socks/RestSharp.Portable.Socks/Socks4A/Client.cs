@@ -4,11 +4,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Security;
+#if !WINRT
 using System.Net.Sockets;
+#endif
 using System.Threading;
 using System.Threading.Tasks;
 using RestSharp.Portable.Socks.Socks4A.Messages;
+#if SUPPORTS_SSLSTREAM
+using System.Net.Security;
+#endif
 
 namespace RestSharp.Portable.Socks.Socks4A
 {
@@ -58,6 +62,7 @@ namespace RestSharp.Portable.Socks.Socks4A
                 _networkStream = _client.GetStream();
                 if (_useSsl)
                 {
+#if SUPPORTS_SSLSTREAM
                     SslStream sslStream;
                     if (_ignoreCertificates)
                     {
@@ -69,6 +74,9 @@ namespace RestSharp.Portable.Socks.Socks4A
                     }
                     sslStream.AuthenticateAsClient(_destinationAddress.Host);
                     _networkStream = sslStream;
+#else
+                    throw new NotSupportedException();
+#endif
                 }
             }
             catch
@@ -128,7 +136,11 @@ namespace RestSharp.Portable.Socks.Socks4A
         {
             if (_client == null)
                 throw new InvalidOperationException();
+#if WINRT
+            _networkStream.Dispose();
+#else
             _networkStream.Close();
+#endif
             _networkStream = null;
             _client.Close();
             _client = null;

@@ -9,6 +9,8 @@
     <Import_RootNamespace>RestSharp.Portable.Socks</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)EndPointType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpVersions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISocksWebProxy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ITcpClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ITcpClientFactory.cs" />
@@ -63,5 +65,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)TcpClientPoolFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TcpClientStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TcpResponseMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebHeaderCollectionExtensions.cs" />
   </ItemGroup>
 </Project>

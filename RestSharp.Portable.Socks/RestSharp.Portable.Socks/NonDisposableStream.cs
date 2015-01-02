@@ -66,8 +66,10 @@ namespace RestSharp.Portable.Socks
         {
         }
 
+#if !WINRT
         public override void Close()
         {
         }
+#endif
     }
 }

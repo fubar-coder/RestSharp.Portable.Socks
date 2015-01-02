@@ -24,8 +24,8 @@ namespace RestSharp.Portable.Socks.Socks4A.Messages
             writer.Write((byte) 0);
             switch (Address.HostNameType)
             {
-                case UriHostNameType.IPv4:
-                case UriHostNameType.IPv6:
+                case EndPointType.IPv4:
+                case EndPointType.IPv6:
                     break;
                 default:
                     data = Encoding.UTF8.GetBytes(Address.Host);

@@ -7,8 +7,8 @@
     <ProjectGuid>{4DC75EFA-77E4-4EA9-AB07-6B60942B2B6F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RestSharp.Portable.Socks.NET45</RootNamespace>
-    <AssemblyName>RestSharp.Portable.Socks.NET45</AssemblyName>
+    <RootNamespace>RestSharp.Portable.Socks</RootNamespace>
+    <AssemblyName>RestSharp.Portable.Socks</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>21bfb49d</NuGetPackageImportStamp>
@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SUPPORTS_NLOG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SUPPORTS_NLOG;SUPPORTS_SSLSTREAM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;SUPPORTS_NLOG;SUPPORTS_SSLSTREAM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>

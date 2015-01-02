@@ -23,6 +23,8 @@ namespace RestSharp.Portable.Socks.Socks4A
 
         public ISocksWebProxy Proxy { get; set; }
 
+        protected override bool PreferIPv4 { get { return true; } }
+
         protected override ITcpClient CreateClient(HttpRequestMessage request, SocksAddress destinationAddress, bool useSsl, CancellationToken cancellationToken, bool forceRecreate)
         {
             if (Proxy == null)

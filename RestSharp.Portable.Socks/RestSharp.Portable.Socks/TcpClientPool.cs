@@ -21,7 +21,9 @@ namespace RestSharp.Portable.Socks
         public TcpClientPool(ITcpClientFactory factory)
         {
             _factory = factory;
+#if SUPPORTS_NLOG
             _logger.Trace("Created TcpClientPool");
+#endif
         }
 
         public OpenConnection Create(SocksAddress address, bool useSsl)
@@ -38,7 +40,9 @@ namespace RestSharp.Portable.Socks
                 }
                 var result = new OpenConnection(address, client);
                 _connectionPool.Add(key, result);
+#if SUPPORTS_NLOG
                 _logger.Debug("Pool: Create client (1): {0}", address);
+#endif
                 return result;
             }
         }
@@ -58,14 +62,20 @@ namespace RestSharp.Portable.Socks
                 {
                     if (!info.DisposeIfInvalid(now))
                     {
+#if SUPPORTS_NLOG
                         _logger.Debug("Pool: Reuse client");
+#endif
                         return info;
                     }
+#if SUPPORTS_NLOG
                     _logger.Debug("Dispose client");
+#endif
                     _connectionPool.Remove(key);
                     info.Client.Dispose();
                 }
+#if SUPPORTS_NLOG
                 _logger.Debug("Pool: Create client (2): {0}", address);
+#endif
                 info = new OpenConnection(address, _factory.Create(address, useSsl));
                 _connectionPool.Add(key, info);
                 return info;

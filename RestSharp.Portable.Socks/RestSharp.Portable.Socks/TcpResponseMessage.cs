@@ -152,12 +152,12 @@ namespace RestSharp.Portable.Socks
             }
         }
 
-        private void SetHeaders(WebHeaderCollection headers)
+        private void SetHeaders(IDictionary<string, IList<string>> headers)
         {
-            for (int i = 0; i != headers.Count; ++i)
+            foreach (var header in headers)
             {
-                var key = headers.GetKey(i);
-                var values = headers.GetValues(i);
+                var key = header.Key;
+                var values = WebHeaderCollectionExtensions.GetValues(header.Value);
                 HttpHeaderDelegate httpHeaderDelegate;
                 if (_httpHeaderActions.TryGetValue(key, out httpHeaderDelegate))
                 {
@@ -181,9 +181,9 @@ namespace RestSharp.Portable.Socks
             return new KeyValuePair<string, string>(key, value);
         }
 
-        private async Task<WebHeaderCollection> ReadHeaders(Stream stream, CancellationToken cancellationToken)
+        private async Task<IDictionary<string, IList<string>>> ReadHeaders(Stream stream, CancellationToken cancellationToken)
         {
-            var result = new WebHeaderCollection();
+            var result = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
             var header = new List<string>();
             string line;
             while (!string.IsNullOrEmpty(line = await ReadLine(stream, cancellationToken)))
@@ -194,8 +194,8 @@ namespace RestSharp.Portable.Socks
                 }
                 else if (header.Count != 0)
                 {
-                    var kv = GetKeyValue(header);
-                    result.Add(kv.Key, kv.Value);
+                    var kvp = GetKeyValue(header);
+                    result.Add(kvp);
 
                     header.Clear();
                     header.Add(line);
@@ -207,8 +207,8 @@ namespace RestSharp.Portable.Socks
             }
             if (header.Count != 0)
             {
-                var kv = GetKeyValue(header);
-                result.Add(kv.Key, kv.Value);
+                var kvp = GetKeyValue(header);
+                result.Add(kvp);
             }
             return result;
         }

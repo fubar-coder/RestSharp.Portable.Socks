@@ -16,9 +16,7 @@ namespace RestSharp.Portable.Socks
 {
     public abstract class TcpClientMessageHandler : HttpMessageHandler
     {
-        private static readonly Random _addressRng = new Random();
-
-        public TcpClientMessageHandler()
+        protected TcpClientMessageHandler()
         {
             Timeout = 100000;
             ReadWriteTimeout = 300000;
@@ -33,6 +31,7 @@ namespace RestSharp.Portable.Socks
         public int ReadWriteTimeout { get; set; }
         public bool ResolveHost { get; set; }
 
+        protected abstract bool PreferIPv4 { get; }
         protected abstract ITcpClient CreateClient(HttpRequestMessage request, SocksAddress destinationAddress, bool useSsl, CancellationToken cancellationToken, bool forceRecreate);
 
         protected async Task<HttpResponseMessage> InternalSendAsync(HttpRequestMessage request, HttpMethod requestMethod, Uri requestUri, CancellationToken cancellationToken, bool forceRecreate)
@@ -40,15 +39,12 @@ namespace RestSharp.Portable.Socks
             var useSsl = string.Equals(requestUri.Scheme, "https", StringComparison.OrdinalIgnoreCase);
             var destinationAddress = new SocksAddress(requestUri);
             if (ResolveHost &&
-                destinationAddress.HostNameType != UriHostNameType.IPv4 &&
-                destinationAddress.HostNameType != UriHostNameType.IPv6)
+                destinationAddress.HostNameType != EndPointType.IPv4 &&
+                destinationAddress.HostNameType != EndPointType.IPv6)
             {
-                var addresses = await Task.Factory.FromAsync<string, IPAddress[]>(Dns.BeginGetHostAddresses, Dns.EndGetHostAddresses, destinationAddress.Host, null);
-                if (addresses.Length != 0)
-                {
-                    var address = addresses[_addressRng.Next(0, addresses.Length)];
-                    destinationAddress = new SocksAddress(address, destinationAddress.Port);
-                }
+                var resolvedHost = await SocksUtilities.ResolveHost(destinationAddress.Host, PreferIPv4);
+                if (!string.IsNullOrEmpty(resolvedHost))
+                    destinationAddress = new SocksAddress(resolvedHost, destinationAddress.Port);
             }
 
             var client = CreateClient(request, destinationAddress, useSsl, cancellationToken, forceRecreate);
@@ -160,7 +156,8 @@ namespace RestSharp.Portable.Socks
                 NewLine = "\r\n"
             })
             {
-                writer.WriteLine("{1} {2} HTTP/{0}", request.Version ?? new Version(1, 1), requestMethod.Method, requestUri.PathAndQuery);
+                var pathAndQuery = requestUri.GetComponents(UriComponents.PathAndQuery, UriFormat.UriEscaped);
+                writer.WriteLine("{1} {2} HTTP/{0}", request.Version ?? new Version(1, 1), requestMethod.Method, pathAndQuery);
                 writer.WriteLine("Host: {0}", requestUri.Host);
                 foreach (var header in request.Headers.Where(x => !string.Equals(x.Key, "Host", StringComparison.OrdinalIgnoreCase)))
                     writer.WriteLine("{0}: {1}", header.Key, string.Join(",", header.Value));

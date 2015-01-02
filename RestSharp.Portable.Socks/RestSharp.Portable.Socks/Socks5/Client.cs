@@ -4,12 +4,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Security;
+#if !WINRT
 using System.Net.Sockets;
+#endif
 using System.Threading;
 using System.Threading.Tasks;
 using RestSharp.Portable.Socks.Socks5.Messages;
 using RestSharp.Portable.Socks.Socks5.Messages.Authentication;
+#if SUPPORTS_SSLSTREAM
+using System.Net.Security;
+#endif
 
 namespace RestSharp.Portable.Socks.Socks5
 {
@@ -23,17 +27,15 @@ namespace RestSharp.Portable.Socks.Socks5
         public int? Timeout { get; set; }
         public int? ReadWriteTimeout { get; set; }
         private Stream _networkStream;
-        private readonly bool _ignoreCertificates;
         private readonly ITcpClientFactory _tcpClientFactory;
         private readonly SocksAddress _destinationAddress;
         private readonly bool _useSsl;
 
-        public Client(ITcpClientFactory tcpClientFactory, SocksAddress address, bool ignoreCertificates, SocksAddress destinationAddress, bool useSsl)
+        public Client(ITcpClientFactory tcpClientFactory, SocksAddress address, SocksAddress destinationAddress, bool useSsl)
         {
             _destinationAddress = destinationAddress;
             _useSsl = useSsl;
             _tcpClientFactory = tcpClientFactory;
-            _ignoreCertificates = ignoreCertificates;
             _address = address;
         }
 
@@ -62,17 +64,14 @@ namespace RestSharp.Portable.Socks.Socks5
                 _networkStream = _client.GetStream();
                 if (_useSsl)
                 {
+#if SUPPORTS_SSLSTREAM
                     SslStream sslStream;
-                    if (_ignoreCertificates)
-                    {
-                        sslStream = new SslStream(_networkStream, true, (sender, certificate, chain, errors) => true);
-                    }
-                    else
-                    {
-                        sslStream = new SslStream(_networkStream, true);
-                    }
+                    sslStream = new SslStream(_networkStream, true);
                     sslStream.AuthenticateAsClient(_destinationAddress.Host);
                     _networkStream = sslStream;
+#else
+                    throw new NotSupportedException();
+#endif
                 }
             }
             catch
@@ -175,7 +174,11 @@ namespace RestSharp.Portable.Socks.Socks5
         {
             if (_client == null)
                 throw new InvalidOperationException();
+#if WINRT
+            _networkStream.Dispose();
+#else
             _networkStream.Close();
+#endif
             _networkStream = null;
             _client.Close();
             _client = null;
