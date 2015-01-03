@@ -15,6 +15,13 @@ namespace RestSharp.Portable.Socks
 {
     internal static class SocksUtilities
     {
+        internal enum IPv4SupportLevel
+        {
+            RequiresIPv4,
+            NoPreference,
+            RequiresIPv6,
+        }
+
 #if !SILVERLIGHT
         private static readonly Random _addressRng = new Random();
 #endif
@@ -90,7 +97,7 @@ namespace RestSharp.Portable.Socks
 #endif
         }
 
-        internal static async Task<string> ResolveHost(string host, bool preferIPv4)
+        internal static async Task<string> ResolveHost(string host, IPv4SupportLevel supportLevel)
         {
 #if WINRT
             var allAddresses = (await DatagramSocket.GetEndpointPairsAsync(new HostName(host), "0"))
@@ -100,15 +107,18 @@ namespace RestSharp.Portable.Socks
             var addressesIPv4 = allAddresses.Where(x => x.Type == HostNameType.Ipv4)
                 .ToList();
             HostName addr;
-            if (preferIPv4 && addressesIPv4.Count != 0)
+            if (supportLevel == IPv4SupportLevel.RequiresIPv4)
             {
-                addr = addressesIPv4[_addressRng.Next(0, addressesIPv4.Count)];
+                if (addressesIPv4.Count != 0)
+                    addr = addressesIPv4[_addressRng.Next(0, addressesIPv4.Count)];
+                else
+                    addr = null;
             }
             else
             {
                 var addressesIPv6 = allAddresses.Where(x => x.Type == HostNameType.Ipv6)
                     .ToList();
-                if (!preferIPv4)
+                if (supportLevel == IPv4SupportLevel.NoPreference)
                     addressesIPv6.AddRange(addressesIPv4);
                 if (addressesIPv6.Count != 0)
                     addr = addressesIPv6[_addressRng.Next(0, addressesIPv6.Count)];
@@ -129,15 +139,18 @@ namespace RestSharp.Portable.Socks
             var addressesIPv4 = allAddresses.Where(x => x.AddressFamily == AddressFamily.InterNetwork)
                 .ToList();
             IPAddress addr;
-            if (preferIPv4 && addressesIPv4.Count != 0)
+            if (supportLevel == IPv4SupportLevel.RequiresIPv4)
             {
-                addr = addressesIPv4[_addressRng.Next(0, addressesIPv4.Count)];
+                if (addressesIPv4.Count != 0)
+                    addr = addressesIPv4[_addressRng.Next(0, addressesIPv4.Count)];
+                else
+                    addr = null;
             }
             else
             {
                 var addressesIPv6 = allAddresses.Where(x => x.AddressFamily == AddressFamily.InterNetworkV6)
                     .ToList();
-                if (!preferIPv4)
+                if (supportLevel == IPv4SupportLevel.NoPreference)
                     addressesIPv6.AddRange(addressesIPv4);
                 if (addressesIPv6.Count != 0)
                     addr = addressesIPv6[_addressRng.Next(0, addressesIPv6.Count)];

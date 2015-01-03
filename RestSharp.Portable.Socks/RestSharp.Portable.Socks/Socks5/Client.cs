@@ -63,16 +63,7 @@ namespace RestSharp.Portable.Socks.Socks5
                 // Do we need SSL?
                 _networkStream = _client.GetStream();
                 if (_useSsl)
-                {
-#if SUPPORTS_SSLSTREAM
-                    SslStream sslStream;
-                    sslStream = new SslStream(_networkStream, true);
-                    sslStream.AuthenticateAsClient(_destinationAddress.Host);
-                    _networkStream = sslStream;
-#else
-                    throw new NotSupportedException();
-#endif
-                }
+                    _networkStream = _tcpClientFactory.CreateSslStream(_networkStream, _destinationAddress.Host);
             }
             catch
             {

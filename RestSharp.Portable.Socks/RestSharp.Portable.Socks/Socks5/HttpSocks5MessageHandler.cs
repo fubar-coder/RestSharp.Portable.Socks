@@ -23,7 +23,7 @@ namespace RestSharp.Portable.Socks.Socks5
 
         public ISocksWebProxy Proxy { get; set; }
 
-        protected override bool PreferIPv4 { get { return false; } }
+        protected override AddressCompatibility AddressCompatibility { get { return AddressCompatibility.SupportsIPv4 | AddressCompatibility.SupportsHost | AddressCompatibility.SupportsIPv6; } }
 
         protected override ITcpClient CreateClient(HttpRequestMessage request, SocksAddress destinationAddress, bool useSsl, CancellationToken cancellationToken, bool forceRecreate)
         {

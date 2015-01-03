@@ -9,6 +9,7 @@
     <Import_RootNamespace>RestSharp.Portable.Socks</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AddressCompatibility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EndPointType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpVersions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISocksWebProxy.cs" />

@@ -26,17 +26,15 @@ namespace RestSharp.Portable.Socks.Socks4A
         public int? Timeout { get; set; }
         public int? ReadWriteTimeout { get; set; }
         private Stream _networkStream;
-        private readonly bool _ignoreCertificates;
         private readonly ITcpClientFactory _tcpClientFactory;
         private readonly SocksAddress _destinationAddress;
         private readonly bool _useSsl;
 
-        public Client(ITcpClientFactory tcpClientFactory, SocksAddress address, bool ignoreCertificates, SocksAddress destinationAddress, bool useSsl)
+        public Client(ITcpClientFactory tcpClientFactory, SocksAddress address, SocksAddress destinationAddress, bool useSsl)
         {
             _destinationAddress = destinationAddress;
             _useSsl = useSsl;
             _tcpClientFactory = tcpClientFactory;
-            _ignoreCertificates = ignoreCertificates;
             _address = address;
         }
 
@@ -61,23 +59,7 @@ namespace RestSharp.Portable.Socks.Socks4A
                 // Do we need SSL?
                 _networkStream = _client.GetStream();
                 if (_useSsl)
-                {
-#if SUPPORTS_SSLSTREAM
-                    SslStream sslStream;
-                    if (_ignoreCertificates)
-                    {
-                        sslStream = new SslStream(_networkStream, true, (sender, certificate, chain, errors) => true);
-                    }
-                    else
-                    {
-                        sslStream = new SslStream(_networkStream, true);
-                    }
-                    sslStream.AuthenticateAsClient(_destinationAddress.Host);
-                    _networkStream = sslStream;
-#else
-                    throw new NotSupportedException();
-#endif
-                }
+                    _networkStream = _tcpClientFactory.CreateSslStream(_networkStream, _destinationAddress.Host);
             }
             catch
             {

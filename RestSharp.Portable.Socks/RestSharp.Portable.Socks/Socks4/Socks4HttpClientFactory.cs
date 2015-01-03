@@ -14,8 +14,6 @@ namespace RestSharp.Portable.Socks.Socks4
             _tcpClientFactory = tcpClientFactory;
         }
 
-        public bool ResolveHost { get; set; }
-
         protected override HttpMessageHandler CreateMessageHandler(IRestClient client, IRestRequest request)
         {
             var proxy = GetProxy(client);
@@ -23,10 +21,7 @@ namespace RestSharp.Portable.Socks.Socks4
             if (socksProxy == null)
                 return base.CreateMessageHandler(client, request);
 
-            var httpClientHandler = new HttpSocks4MessageHandler(_pool, socksProxy)
-            {
-                ResolveHost = ResolveHost,
-            };
+            var httpClientHandler = new HttpSocks4MessageHandler(_pool, socksProxy);
             var cookies = GetCookies(client, request);
             if (cookies != null)
             {

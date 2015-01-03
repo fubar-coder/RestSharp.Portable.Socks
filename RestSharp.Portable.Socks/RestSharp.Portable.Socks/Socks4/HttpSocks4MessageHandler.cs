@@ -23,7 +23,7 @@ namespace RestSharp.Portable.Socks.Socks4
 
         public ISocksWebProxy Proxy { get; set; }
 
-        protected override bool PreferIPv4 { get { return true; } }
+        protected override AddressCompatibility AddressCompatibility { get { return AddressCompatibility.SupportsIPv4; } }
 
         protected override ITcpClient CreateClient(HttpRequestMessage request, SocksAddress destinationAddress, bool useSsl, CancellationToken cancellationToken, bool forceRecreate)
         {
@@ -36,7 +36,7 @@ namespace RestSharp.Portable.Socks.Socks4
                 ? _pool.Create(destinationAddress, useSsl) 
                 : _pool.GetOrCreateClient(destinationAddress, useSsl);
 
-            var client = new Client(new TcpClientPoolFactory(_pool), new SocksAddress(proxyUri), ResolveHost, destinationAddress, useSsl)
+            var client = new Client(new TcpClientPoolFactory(_pool), new SocksAddress(proxyUri), destinationAddress, useSsl)
             {
                 Credentials = Proxy.Credentials,
             };
