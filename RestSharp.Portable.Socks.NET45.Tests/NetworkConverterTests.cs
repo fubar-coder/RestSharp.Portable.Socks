@@ -47,8 +47,10 @@ namespace RestSharp.Portable.Socks.NET45.Tests
         [InlineData("::ffff:7f00:1", new ushort[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0xffff, 0x7f00, 0x1 })]
         public void TestConvertToIPv6(string ipv6Text, ushort[] ipv6Data)
         {
-            var data = NetworkConverter.ToIPv6(ipv6Data);
-            Assert.Equal(ipv6Text, data);
+            var ipv6 = NetworkConverter.ToIPv6(ipv6Data);
+            Assert.Equal(ipv6Text, ipv6);
+            var words = NetworkConverter.GetWordsForIPv6(ipv6);
+            Assert.Equal(ipv6Data, words);
         }
     }
 }
