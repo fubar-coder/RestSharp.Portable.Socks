@@ -38,5 +38,17 @@ namespace RestSharp.Portable.Socks.NET45.Tests
         {
             Assert.Equal(isLoopBack, NetworkConverter.IsLoopBack(ipv6Text));
         }
+
+        [Theory]
+        [InlineData("2001:db8:85a3:8d3:1319:8a2e:370:7344", new ushort[] { 0x2001, 0x0db8, 0x85a3, 0x08d3, 0x1319, 0x8a2e, 0x0370, 0x7344 })]
+        [InlineData("2001:db8::8d3:0:8a2e:70:7344", new ushort[] { 0x2001, 0xdb8, 0x0, 0x8d3, 0x0, 0x8a2e, 0x70, 0x7344 })]
+        [InlineData("2001:db8::1428:57ab", new ushort[] { 0x2001, 0x0db8, 0x0, 0x0, 0x0, 0x0, 0x1428, 0x57ab })]
+        [InlineData("2001:db8:0:0:8d3::", new ushort[] { 0x2001, 0x0db8, 0x0, 0x0, 0x8d3, 0x0, 0x0, 0x0 })]
+        [InlineData("::ffff:7f00:1", new ushort[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0xffff, 0x7f00, 0x1 })]
+        public void TestConvertToIPv6(string ipv6Text, ushort[] ipv6Data)
+        {
+            var data = NetworkConverter.ToIPv6(ipv6Data);
+            Assert.Equal(ipv6Text, data);
+        }
     }
 }
