@@ -122,7 +122,7 @@ namespace RestSharp.Portable.Socks
 
         public static byte[] GetBytesForIPv4(string ipv4)
         {
-            var result = ipv4.Split('.').Select(x => byte.Parse(ipv4))
+            var result = ipv4.Split('.').Select(byte.Parse)
                 .Reverse()
                 .ToArray();
             return result;
@@ -166,9 +166,9 @@ namespace RestSharp.Portable.Socks
                 else
                 {
                     var nonEmptyIndex = prefixSize;
-                    while (nonEmptyIndex < (parts.Length - 1) && parts[nonEmptyIndex + 1] != -1)
+                    while (nonEmptyIndex < (parts.Length - 1) && parts[nonEmptyIndex + 1] == -1)
                         nonEmptyIndex += 1;
-                    var suffixSize = parts.Length - prefixSize - 1;
+                    var suffixSize = parts.Length - nonEmptyIndex - 1;
                     for (var i = 0; i != prefixSize; ++i)
                         data[i] = (ushort)parts[i];
                     var suffixIndexSrc = parts.Length - suffixSize;
