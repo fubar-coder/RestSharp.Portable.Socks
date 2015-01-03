@@ -61,7 +61,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RestSharp.Portable.Socks\RestSharp.Portable.Socks.NET45\RestSharp.Portable.Socks.NET45.csproj">
+    <ProjectReference Include="..\RestSharp.Portable.Socks.NET45\RestSharp.Portable.Socks.NET45.csproj">
       <Project>{4dc75efa-77e4-4ea9-ab07-6b60942b2b6f}</Project>
       <Name>RestSharp.Portable.Socks.NET45</Name>
     </ProjectReference>

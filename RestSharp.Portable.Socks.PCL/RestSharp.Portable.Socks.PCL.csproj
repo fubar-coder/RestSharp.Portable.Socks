@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <Import Project="..\RestSharp.Portable.Socks\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems" Label="Shared" Condition="Exists('..\RestSharp.Portable.Socks\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems')" />
+  <Import Project="..\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems" Label="Shared" Condition="Exists('..\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
