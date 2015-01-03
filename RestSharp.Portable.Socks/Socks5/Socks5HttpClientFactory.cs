@@ -8,6 +8,8 @@ namespace RestSharp.Portable.Socks.Socks5
         private readonly ITcpClientFactory _tcpClientFactory;
         private readonly Pooling.TcpClientPool _pool;
 
+        public bool ResolveHost { get; set; }
+
         public Socks5HttpClientFactory(ITcpClientFactory tcpClientFactory)
         {
             _pool = new Pooling.TcpClientPool(tcpClientFactory);
@@ -21,7 +23,10 @@ namespace RestSharp.Portable.Socks.Socks5
             if (socksProxy == null)
                 return base.CreateMessageHandler(client, request);
 
-            var httpClientHandler = new HttpSocks5MessageHandler(_pool, socksProxy);
+            var httpClientHandler = new HttpSocks5MessageHandler(_pool, socksProxy)
+            {
+                ResolveHost = ResolveHost,
+            };
             var cookies = GetCookies(client, request);
             if (cookies != null)
             {
