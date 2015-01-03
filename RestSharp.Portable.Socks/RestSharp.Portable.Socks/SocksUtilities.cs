@@ -15,7 +15,9 @@ namespace RestSharp.Portable.Socks
 {
     internal static class SocksUtilities
     {
+#if !SILVERLIGHT
         private static readonly Random _addressRng = new Random();
+#endif
         private static readonly Encoding _encoding = new UTF8Encoding(false);
         public static Encoding DefaultEncoding { get { return _encoding; } }
 
