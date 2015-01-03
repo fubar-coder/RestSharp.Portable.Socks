@@ -36,6 +36,18 @@ namespace RestSharp.Portable.Socks
         }
 #endif
 
+        public static bool IsLoopBack(string ip)
+        {
+            switch (SocksUtilities.GetHostNameType(ip))
+            {
+                case EndPointType.IPv4:
+                    return IsLoopBackForIPv4(ip);
+                case EndPointType.IPv6:
+                    return IsLoopBackForIPv6(ip);
+            }
+            throw new NotSupportedException();
+        }
+
         public static bool IsLoopBackForIPv6(ushort[] data)
         {
             for (var i=0; i!=5; ++i)
