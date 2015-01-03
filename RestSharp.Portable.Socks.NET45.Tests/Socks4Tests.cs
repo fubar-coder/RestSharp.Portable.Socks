@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using RestSharp.Portable.Socks.Socks4;
-using RestSharp.Portable.Socks.Socks5;
 using Xunit;
 namespace RestSharp.Portable.Socks.NET45.Tests
 {
@@ -13,7 +12,7 @@ namespace RestSharp.Portable.Socks.NET45.Tests
             {
                 HttpClientFactory = new Socks4HttpClientFactory(new TcpClientImpl.TcpClientWrapperFactory(useSsl)),
                 CookieContainer = new CookieContainer(),
-                Proxy = new Socks5WebProxy(new SocksAddress("localhost", 9150)),
+                Proxy = new Socks4WebProxy(new SocksAddress("localhost", 9150)),
             };
             return client;
         }

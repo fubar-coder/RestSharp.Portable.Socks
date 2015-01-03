@@ -29,9 +29,26 @@ namespace RestSharp.Portable.Socks
         public bool UseCookies { get; set; }
         public int Timeout { get; set; }
         public int ReadWriteTimeout { get; set; }
+        public bool ResolveHost { get; set; }
 
         protected abstract AddressCompatibility AddressCompatibility { get; }
         protected abstract ITcpClient CreateClient(HttpRequestMessage request, SocksAddress destinationAddress, bool useSsl, CancellationToken cancellationToken, bool forceRecreate);
+
+        private async Task<SocksAddress> ResolveHostName(SocksAddress address)
+        {
+            if (address.HostNameType != EndPointType.HostName)
+                return address;
+
+            var supportLevel = (AddressCompatibility & AddressCompatibility.SupportsIPv6) == AddressCompatibility.SupportsIPv6
+                ? SocksUtilities.IPv4SupportLevel.NoPreference
+                : SocksUtilities.IPv4SupportLevel.RequiresIPv4;
+
+            // Try resolve host name
+            var resolvedHost = await SocksUtilities.ResolveHost(address.Host, supportLevel);
+            if (string.IsNullOrEmpty(resolvedHost))
+                return null;
+            return new SocksAddress(resolvedHost, address.Port);
+        }
 
         protected async Task<HttpResponseMessage> InternalSendAsync(HttpRequestMessage request, HttpMethod requestMethod, Uri requestUri, CancellationToken cancellationToken, bool forceRecreate)
         {
@@ -49,17 +66,15 @@ namespace RestSharp.Portable.Socks
                 case EndPointType.HostName:
                     if ((AddressCompatibility & AddressCompatibility.SupportsHost) != AddressCompatibility.SupportsHost)
                     {
-                        var supportLevel = (AddressCompatibility & AddressCompatibility.SupportsIPv6) == AddressCompatibility.SupportsIPv6 
-                            ? SocksUtilities.IPv4SupportLevel.NoPreference 
-                            : SocksUtilities.IPv4SupportLevel.RequiresIPv4;
-                        // Try resolve host name
-                        var resolvedHost = await SocksUtilities.ResolveHost(destinationAddress.Host, supportLevel);
-                        if (string.IsNullOrEmpty(resolvedHost))
+                        destinationAddress = await ResolveHostName(destinationAddress);
+                        if (destinationAddress == null)
                             throw new NotSupportedException();
-                        destinationAddress = new SocksAddress(resolvedHost, destinationAddress.Port);
                     }
                     break;
             }
+
+            if (ResolveHost && destinationAddress.HostNameType == EndPointType.HostName)
+                destinationAddress = await ResolveHostName(destinationAddress) ?? destinationAddress;
 
             var client = CreateClient(request, destinationAddress, useSsl, cancellationToken, forceRecreate);
             try
