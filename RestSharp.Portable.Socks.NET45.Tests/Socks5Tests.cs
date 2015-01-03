@@ -22,7 +22,7 @@ namespace RestSharp.Portable.Socks.NET45.Tests
             return client;
         }
 
-        [Theory]
+        [SocksProxyAvailableTheory]
         [InlineData(false, false)]
         [InlineData(false, true)]
         [InlineData(true, false)]

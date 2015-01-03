@@ -6,9 +6,9 @@ using RestSharp.Portable.Socks.Socks4;
 using Xunit;
 namespace RestSharp.Portable.Socks.NET45.Tests
 {
-    public class Socks4aTests
+    public class Socks4ATests
     {
-        static RestClient CreateClientSocks4a(bool useSsl, bool useHost)
+        static RestClient CreateClientSocks4A(bool useSsl, bool useHost)
         {
             bool ignoreSslErrors = !useHost && useSsl;
             var client = new RestClient(string.Format("http{0}://httpbin.org/cookies", useSsl ? "s" : string.Empty))
@@ -23,14 +23,14 @@ namespace RestSharp.Portable.Socks.NET45.Tests
             return client;
         }
 
-        [Theory]
+        [SocksProxyAvailableTheory]
         [InlineData(false, false)]
         [InlineData(false, true)]
         [InlineData(true, false)]
         [InlineData(true, true)]
         public async Task ExecuteHttpBinTests(bool useSsl, bool useHost)
         {
-            var client = CreateClientSocks4a(useSsl, useHost);
+            var client = CreateClientSocks4A(useSsl, useHost);
             await TestSocksRequests.Test(client);
         }
     }

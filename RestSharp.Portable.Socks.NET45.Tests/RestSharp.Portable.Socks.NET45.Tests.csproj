@@ -67,6 +67,7 @@
     <Compile Include="Socks5Tests.cs" />
     <Compile Include="Socks4aTests.cs" />
     <Compile Include="Socks4Tests.cs" />
+    <Compile Include="SocksProxyAvailableTheoryAttribute.cs" />
     <Compile Include="TcpClientImpl\TcpClientWrapper.cs" />
     <Compile Include="TcpClientImpl\TcpClientWrapperFactory.cs" />
     <Compile Include="TcpClientImpl\TcpClientWrapperMessageHandler.cs" />

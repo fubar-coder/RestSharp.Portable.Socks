@@ -17,7 +17,7 @@ namespace RestSharp.Portable.Socks.NET45.Tests
             return client;
         }
 
-        [Theory]
+        [SocksProxyAvailableTheory]
         [InlineData(false)]
         [InlineData(true)]
         public async Task ExecuteHttpBinTests(bool useSsl)
