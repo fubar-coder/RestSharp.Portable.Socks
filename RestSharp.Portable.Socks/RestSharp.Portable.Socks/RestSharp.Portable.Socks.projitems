@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ISocksWebProxy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ITcpClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ITcpClientFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NonDisposableStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenConnection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenConnectionKey.cs" />

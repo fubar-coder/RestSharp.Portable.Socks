@@ -74,11 +74,11 @@ namespace RestSharp.Portable.Socks
 
         public void WriteToV4(BinaryWriter writer)
         {
-            WritePort(writer, Port);
+            writer.Write(this.GetPortBytes());
             switch (HostNameType)
             {
                 case EndPointType.IPv4:
-                    writer.Write(this.GetIpAddressBytes());
+                    writer.Write(this.GetAddressBytes());
                     break;
                 default:
                     throw new NotSupportedException();
@@ -87,11 +87,11 @@ namespace RestSharp.Portable.Socks
 
         public void WriteToV4A(BinaryWriter writer)
         {
-            WritePort(writer, Port);
+            writer.Write(this.GetPortBytes());
             switch (HostNameType)
             {
                 case EndPointType.IPv4:
-                    writer.Write(this.GetIpAddressBytes());
+                    writer.Write(this.GetAddressBytes());
                     break;
                 case EndPointType.IPv6:
                     throw new NotSupportedException();
@@ -107,11 +107,11 @@ namespace RestSharp.Portable.Socks
             {
                 case EndPointType.IPv4:
                     writer.Write((byte) 1);
-                    writer.Write(this.GetIpAddressBytes());
+                    writer.Write(this.GetAddressBytes());
                     break;
                 case EndPointType.IPv6:
                     writer.Write((byte) 4);
-                    writer.Write(this.GetIpAddressBytes());
+                    writer.Write(this.GetAddressBytes());
                     break;
                 default:
                 {
@@ -122,31 +122,15 @@ namespace RestSharp.Portable.Socks
                     break;
                 }
             }
-            WritePort(writer, Port);
-        }
-
-        private static void WritePort(BinaryWriter writer, int port)
-        {
-            var portBytes = BitConverter.GetBytes(unchecked((short)port));
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(portBytes);
-            writer.Write(portBytes);
-        }
-
-        private static int ReadPort(BinaryReader reader)
-        {
-            var portBytes = reader.ReadBytes(2);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(portBytes);
-            return BitConverter.ToUInt16(portBytes, 0);
+            writer.Write(this.GetPortBytes());
         }
 
         public void ReadFromV4(BinaryReader reader)
         {
-            Port = ReadPort(reader);
+            Port = NetworkConverter.ToPort(reader.ReadBytes(2));
             // IPv4
             HostNameType = EndPointType.IPv4;
-            Host = SocksUtilities.GetIPv4ForBytes(reader.ReadBytes(4));
+            Host = NetworkConverter.ToIPv4(reader.ReadBytes(4));
         }
 
         public void ReadFromV5(BinaryReader reader)
@@ -157,7 +141,7 @@ namespace RestSharp.Portable.Socks
                 case 1:
                     // IPv4
                     HostNameType = EndPointType.IPv4;
-                    Host = SocksUtilities.GetIPv4ForBytes(reader.ReadBytes(4));
+                    Host = NetworkConverter.ToIPv4(reader.ReadBytes(4));
                     break;
                 case 3:
                     // Host name
@@ -170,12 +154,12 @@ namespace RestSharp.Portable.Socks
                 case 4:
                     // IPv6
                     HostNameType = EndPointType.IPv6;
-                    Host = SocksUtilities.GetIPv6ForBytes(reader.ReadBytes(16));
+                    Host = NetworkConverter.ToIPv6(reader.ReadBytes(16));
                     break;
                 default:
                     throw new NotSupportedException();
             }
-            Port = ReadPort(reader);
+            Port = NetworkConverter.ToPort(reader.ReadBytes(2));
         }
 
         public Uri ToUri()
