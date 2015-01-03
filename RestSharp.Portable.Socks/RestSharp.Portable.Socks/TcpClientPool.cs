@@ -10,10 +10,6 @@ namespace RestSharp.Portable.Socks
 {
     class TcpClientPool
     {
-#if SUPPORTS_NLOG
-        private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-#endif
-
         private readonly ITcpClientFactory _factory;
         private readonly Dictionary<OpenConnectionKey, OpenConnection> _connectionPool = new Dictionary<OpenConnectionKey, OpenConnection>(OpenConnectionKeyComparer.Default);
 
