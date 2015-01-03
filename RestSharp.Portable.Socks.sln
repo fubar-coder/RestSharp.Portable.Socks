@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestSharp.Portable.Socks.NE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestSharp.Portable.Socks.PCL", "RestSharp.Portable.Socks.PCL\RestSharp.Portable.Socks.PCL.csproj", "{1463493A-9968-40A3-9C85-403481E19FE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestSharp.Portable.Socks.PCL.Tests", "RestSharp.Portable.Socks.PCL.Tests\RestSharp.Portable.Socks.PCL.Tests.csproj", "{9B8DF468-ACDF-4C67-AA1F-8C1271493F29}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		RestSharp.Portable.Socks\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems*{69bd6dca-c054-4085-a789-1c1d57810f04}*SharedItemsImports = 4
@@ -55,6 +57,10 @@ Global
 		{1463493A-9968-40A3-9C85-403481E19FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1463493A-9968-40A3-9C85-403481E19FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1463493A-9968-40A3-9C85-403481E19FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B8DF468-ACDF-4C67-AA1F-8C1271493F29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B8DF468-ACDF-4C67-AA1F-8C1271493F29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B8DF468-ACDF-4C67-AA1F-8C1271493F29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B8DF468-ACDF-4C67-AA1F-8C1271493F29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -69,7 +69,7 @@ namespace RestSharp.Portable.Socks
         }
 
 #if PCL
-        private static System.Text.RegularExpressions.Regex _ipv4RegEx = new System.Text.RegularExpressions.Regex(@"^\s*\d{1,3}\s*\.\s*\d{1,3}\s*\.\s*\d{1,3}\s*\.\s*\d{1,3}\s*$");
+        private static readonly System.Text.RegularExpressions.Regex _ipv4RegEx = new System.Text.RegularExpressions.Regex(@"^\s*\d{1,3}\s*\.\s*\d{1,3}\s*\.\s*\d{1,3}\s*\.\s*\d{1,3}\s*$");
 #endif
 
         public static EndPointType GetHostNameType(string host)
