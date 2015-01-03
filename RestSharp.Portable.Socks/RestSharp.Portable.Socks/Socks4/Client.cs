@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-#if !WINRT
+#if !WINRT && !PCL
 using System.Net.Sockets;
 #endif
 using System.Threading;
@@ -118,7 +118,7 @@ namespace RestSharp.Portable.Socks.Socks4
         {
             if (_client == null)
                 throw new InvalidOperationException();
-#if WINRT
+#if WINRT || PCL
             _networkStream.Dispose();
 #else
             _networkStream.Close();

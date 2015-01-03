@@ -7,7 +7,7 @@ using System.Collections.Generic;
 #if WINRT
 using Windows.Networking;
 using Windows.Networking.Sockets;
-#else
+#elif !PCL
 using System.Net.Sockets;
 #endif
 
@@ -42,7 +42,7 @@ namespace RestSharp.Portable.Socks
             }
             throw new NotSupportedException();
         }
-#else
+#elif !PCL
         public static EndPointType GetHostNameType(this IPAddress address)
         {
             if (address.AddressFamily == AddressFamily.InterNetwork)
@@ -53,7 +53,7 @@ namespace RestSharp.Portable.Socks
 
         public static EndPointType GetHostNameType(this Uri address)
         {
-#if SILVERLIGHT
+#if SILVERLIGHT || PCL
             return GetHostNameType(address.Host);
 #else
             switch (address.HostNameType)
@@ -68,10 +68,20 @@ namespace RestSharp.Portable.Socks
 #endif
         }
 
+#if PCL
+        private static System.Text.RegularExpressions.Regex _ipv4RegEx = new System.Text.RegularExpressions.Regex(@"^\s*\d{1,3}\s*\.\s*\d{1,3}\s*\.\s*\d{1,3}\s*\.\s*\d{1,3}\s*$");
+#endif
+
         public static EndPointType GetHostNameType(string host)
         {
 #if WINRT
             return GetHostNameType(new HostName(host));
+#elif PCL
+            if (host.Contains(":"))
+                return EndPointType.IPv6;
+            if (_ipv4RegEx.IsMatch(host))
+                return EndPointType.IPv4;
+            return EndPointType.HostName;
 #else
             IPAddress address;
             if (!IPAddress.TryParse(host, out address))
@@ -90,7 +100,7 @@ namespace RestSharp.Portable.Socks
                 .Select(x => x.RemoteHostName)
                 .ToList();
             return allAddresses.Any(x => x.IsLoopBack());
-#elif SILVERLIGHT
+#elif SILVERLIGHT || PCL
             return false;
 #else
             return Dns.GetHostAddresses(host).Any(IPAddress.IsLoopback);
@@ -128,7 +138,7 @@ namespace RestSharp.Portable.Socks
             if (addr == null)
                 return null;
             return addr.CanonicalName;
-#elif SILVERLIGHT
+#elif SILVERLIGHT || PCL
             return await Task.Factory.StartNew<string>(() =>
             {
                 throw new NotSupportedException();

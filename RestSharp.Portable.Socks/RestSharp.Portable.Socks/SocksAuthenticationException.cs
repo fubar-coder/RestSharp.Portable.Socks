@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RestSharp.Portable.Socks
 {
-#if !SILVERLIGHT && !WINRT
+#if !SILVERLIGHT && !WINRT && !PCL
     [Serializable]
 #endif
     public class SocksAuthenticationException : SocksException
@@ -29,7 +29,7 @@ namespace RestSharp.Portable.Socks
         {
         }
 
-#if !SILVERLIGHT && !WINRT
+#if !SILVERLIGHT && !WINRT && !PCL
         protected SocksAuthenticationException(
             SerializationInfo info,
             StreamingContext context) : base(info, context)

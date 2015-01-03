@@ -66,7 +66,7 @@ namespace RestSharp.Portable.Socks
         {
         }
 
-#if !WINRT
+#if !WINRT && !PCL
         public override void Close()
         {
         }

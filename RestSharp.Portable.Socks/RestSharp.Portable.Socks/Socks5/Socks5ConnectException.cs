@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace RestSharp.Portable.Socks.Socks5
 {
-#if !SILVERLIGHT && !WINRT
+#if !SILVERLIGHT && !WINRT && !PCL
     [Serializable]
 #endif
     public class Socks5ConnectException : SocksException
@@ -30,7 +30,7 @@ namespace RestSharp.Portable.Socks.Socks5
             Status = status;
         }
 
-#if !SILVERLIGHT && !WINRT
+#if !SILVERLIGHT && !WINRT && !PCL
         protected Socks5ConnectException(
             SerializationInfo info,
             StreamingContext context) : base(info, context)

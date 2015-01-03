@@ -47,7 +47,7 @@ namespace RestSharp.Portable.Socks
             Host = address.ToString();
             HostNameType = address.GetHostNameType();
         }
-#else
+#elif !PCL
         public SocksAddress(IPAddress address, int port)
         {
             Port = port;
@@ -56,7 +56,7 @@ namespace RestSharp.Portable.Socks
         }
 #endif
 
-#if !WINRT
+#if !WINRT && !PCL
         public SocksAddress(IPEndPoint endPoint)
         {
             Port = endPoint.Port;

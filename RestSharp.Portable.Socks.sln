@@ -15,10 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestSharp.Portable.WinRT", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestSharp.Portable.Socks.NET45.Tests", "RestSharp.Portable.Socks.NET45.Tests\RestSharp.Portable.Socks.NET45.Tests.csproj", "{BA33F0C9-18C8-4A7A-A479-2757AEA78384}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestSharp.Portable.Socks.PCL", "RestSharp.Portable.Socks.PCL\RestSharp.Portable.Socks.PCL.csproj", "{1463493A-9968-40A3-9C85-403481E19FE7}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		RestSharp.Portable.Socks\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems*{69bd6dca-c054-4085-a789-1c1d57810f04}*SharedItemsImports = 4
 		RestSharp.Portable.Socks\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems*{cf2b6930-ebf4-4863-8f5c-e63814cbd053}*SharedItemsImports = 4
+		RestSharp.Portable.Socks\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems*{1463493a-9968-40a3-9c85-403481e19fe7}*SharedItemsImports = 4
 		RestSharp.Portable.Socks\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems*{a472ac08-5efb-480f-935c-c183143b0ea6}*SharedItemsImports = 13
 		RestSharp.Portable.Socks\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems*{e0c20f72-8f95-41d6-9a89-2a33134a365d}*SharedItemsImports = 4
 		RestSharp.Portable.Socks\RestSharp.Portable.Socks\RestSharp.Portable.Socks.projitems*{4dc75efa-77e4-4ea9-ab07-6b60942b2b6f}*SharedItemsImports = 4
@@ -48,6 +51,10 @@ Global
 		{BA33F0C9-18C8-4A7A-A479-2757AEA78384}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA33F0C9-18C8-4A7A-A479-2757AEA78384}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA33F0C9-18C8-4A7A-A479-2757AEA78384}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1463493A-9968-40A3-9C85-403481E19FE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1463493A-9968-40A3-9C85-403481E19FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1463493A-9968-40A3-9C85-403481E19FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1463493A-9968-40A3-9C85-403481E19FE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
