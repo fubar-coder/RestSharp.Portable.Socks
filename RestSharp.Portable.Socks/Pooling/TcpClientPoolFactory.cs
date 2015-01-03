@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-#if SUPPORTS_SSLSTREAM
-using System.Net.Security;
-#endif
 using System.Text;
+using System.Threading.Tasks;
 
-namespace RestSharp.Portable.Socks
+namespace RestSharp.Portable.Socks.Pooling
 {
     class TcpClientPoolFactory : ITcpClientFactory
     {
@@ -23,15 +21,9 @@ namespace RestSharp.Portable.Socks
             return conn.Client;
         }
 
-        public virtual Stream CreateSslStream(Stream networkStream, string destinationHost)
+        public virtual async Task<Stream> CreateSslStream(Stream networkStream, string destinationHost)
         {
-#if SUPPORTS_SSLSTREAM
-            var sslStream = new SslStream(networkStream, true);
-            sslStream.AuthenticateAsClient(destinationHost);
-            return sslStream;
-#else
-            throw new NotSupportedException();
-#endif
+            return await Pool.Factory.CreateSslStream(networkStream, destinationHost);
         }
     }
 }

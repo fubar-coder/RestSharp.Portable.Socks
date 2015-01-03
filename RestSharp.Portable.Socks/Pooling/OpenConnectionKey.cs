@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RestSharp.Portable.Socks
+namespace RestSharp.Portable.Socks.Pooling
 {
     class OpenConnectionKey : IComparable<OpenConnectionKey>, IEquatable<OpenConnectionKey>, IComparable
     {

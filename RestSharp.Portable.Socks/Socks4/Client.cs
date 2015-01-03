@@ -10,9 +10,6 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using RestSharp.Portable.Socks.Socks4.Messages;
-#if SUPPORTS_SSLSTREAM
-using System.Net.Security;
-#endif
 
 namespace RestSharp.Portable.Socks.Socks4
 {
@@ -59,7 +56,7 @@ namespace RestSharp.Portable.Socks.Socks4
                 // Do we need SSL?
                 _networkStream = _client.GetStream();
                 if (_useSsl)
-                    _networkStream = _tcpClientFactory.CreateSslStream(_networkStream, _destinationAddress.Host);
+                    _networkStream = await _tcpClientFactory.CreateSslStream(_networkStream, _destinationAddress.Host);
             }
             catch
             {
@@ -75,9 +72,21 @@ namespace RestSharp.Portable.Socks.Socks4
             return _networkStream;
         }
 
+        private string GetUserId()
+        {
+            if (Credentials == null)
+                return string.Empty;
+            var socksCredentials =
+                Credentials.GetCredential(new UriBuilder("socks4", SocksAddress.Host, SocksAddress.Port).Uri,
+                    "Plain");
+            if (socksCredentials == null)
+                return string.Empty;
+            return socksCredentials.UserName;
+        }
+
         private async Task Connect(SocksAddress destinationAddress, CancellationToken ct)
         {
-            var response = await Execute<ConnectResponse>(new ConnectRequest(destinationAddress, Guid.NewGuid().ToString()), ct);
+            var response = await Execute<ConnectResponse>(new ConnectRequest(destinationAddress, GetUserId()), ct);
             if (response.Status != ConnectStatus.Granted)
                 throw new Socks4ConnectException(response.Status);
         }

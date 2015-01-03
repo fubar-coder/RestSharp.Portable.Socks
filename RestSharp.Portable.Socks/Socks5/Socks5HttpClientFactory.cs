@@ -6,11 +6,11 @@ namespace RestSharp.Portable.Socks.Socks5
     public class Socks5HttpClientFactory : DefaultHttpClientFactory
     {
         private readonly ITcpClientFactory _tcpClientFactory;
-        private readonly TcpClientPool _pool;
+        private readonly Pooling.TcpClientPool _pool;
 
         public Socks5HttpClientFactory(ITcpClientFactory tcpClientFactory)
         {
-            _pool = new TcpClientPool(tcpClientFactory);
+            _pool = new Pooling.TcpClientPool(tcpClientFactory);
             _tcpClientFactory = tcpClientFactory;
         }
 

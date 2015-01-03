@@ -5,17 +5,17 @@ using System.Threading;
 namespace RestSharp.Portable.Socks.Socks4
 {
     public class HttpSocks4MessageHandler : TcpClientMessageHandler
-    { 
-        private readonly TcpClientPool _pool;
-        private OpenConnection _connection;
+    {
+        private readonly Pooling.TcpClientPool _pool;
+        private Pooling.OpenConnection _connection;
 
         public HttpSocks4MessageHandler(ITcpClientFactory tcpClientFactory, ISocksWebProxy proxy)
         {
-            _pool = new TcpClientPool(tcpClientFactory);
+            _pool = new Pooling.TcpClientPool(tcpClientFactory);
             Proxy = proxy;
         }
 
-        internal HttpSocks4MessageHandler(TcpClientPool pool, ISocksWebProxy proxy)
+        internal HttpSocks4MessageHandler(Pooling.TcpClientPool pool, ISocksWebProxy proxy)
         {
             _pool = pool;
             Proxy = proxy;
@@ -36,7 +36,7 @@ namespace RestSharp.Portable.Socks.Socks4
                 ? _pool.Create(destinationAddress, useSsl) 
                 : _pool.GetOrCreateClient(destinationAddress, useSsl);
 
-            var client = new Client(new TcpClientPoolFactory(_pool), new SocksAddress(proxyUri), destinationAddress, useSsl)
+            var client = new Client(new Pooling.TcpClientPoolFactory(_pool), new SocksAddress(proxyUri), destinationAddress, useSsl)
             {
                 Credentials = Proxy.Credentials,
             };

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace RestSharp.Portable.Socks
+namespace RestSharp.Portable.Socks.Pooling
 {
     class OpenConnectionKeyComparer : IComparer<OpenConnectionKey>, IEqualityComparer<OpenConnectionKey>, IComparer, IEqualityComparer
     {

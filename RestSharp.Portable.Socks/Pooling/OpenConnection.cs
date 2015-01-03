@@ -5,9 +5,9 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 
-namespace RestSharp.Portable.Socks
+namespace RestSharp.Portable.Socks.Pooling
 {
-    internal class OpenConnection
+    internal class OpenConnection : IPooledConnection
     {
         private static readonly TimeSpan InfiniteTimespan = TimeSpan.FromMilliseconds(System.Threading.Timeout.Infinite);
 

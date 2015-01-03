@@ -27,7 +27,7 @@ namespace RestSharp.Portable.Socks
         {
             IList<string> entry;
             if (!collection.TryGetValue(kvp.Key, out entry))
-                collection.Add(kvp.Key, new List<string>());
+                collection.Add(kvp.Key, entry = new List<string>());
             entry.Add(kvp.Value);
         }
     }

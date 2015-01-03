@@ -17,9 +17,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)ITcpClientFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NonDisposableStream.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)OpenConnection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)OpenConnectionKey.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)OpenConnectionKeyComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pooling\IPooledConnection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pooling\OpenConnection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pooling\OpenConnectionKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pooling\OpenConnectionKeyComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pooling\TcpClientPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pooling\TcpClientPoolFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socks4A\Client.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socks4A\HttpSocks4aMessageHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socks4A\Messages\ConnectRequest.cs" />
@@ -63,8 +66,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)SocksVersion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TaskExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TcpClientMessageHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TcpClientPool.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TcpClientPoolFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TcpClientStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TcpResponseMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebHeaderCollectionExtensions.cs" />

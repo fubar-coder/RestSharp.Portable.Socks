@@ -6,25 +6,34 @@ using System.Net.Http;
 using System.Text;
 using System.Xml.Schema;
 
-namespace RestSharp.Portable.Socks
+namespace RestSharp.Portable.Socks.Pooling
 {
-    class TcpClientPool
+    public class TcpClientPool
     {
-        private readonly ITcpClientFactory _factory;
         private readonly Dictionary<OpenConnectionKey, OpenConnection> _connectionPool = new Dictionary<OpenConnectionKey, OpenConnection>(OpenConnectionKeyComparer.Default);
+
+        public ITcpClientFactory Factory { get; private set; }
 
         public TcpClientPool(ITcpClientFactory factory)
         {
-            _factory = factory;
+            Factory = factory;
 #if SUPPORTS_NLOG
             _logger.Trace("Created TcpClientPool");
 #endif
         }
 
-        public OpenConnection Create(SocksAddress address, bool useSsl)
+        public IPooledConnection Get(SocksAddress address, bool useSsl, bool forceCreate)
+        {
+            var conn = forceCreate
+                ? Create(address, useSsl)
+                : GetOrCreateClient(address, useSsl);
+            return conn;
+        }
+
+        internal OpenConnection Create(SocksAddress address, bool useSsl)
         {
             var key = new OpenConnectionKey(address, useSsl);
-            var client = _factory.Create(address, useSsl);
+            var client = Factory.Create(address, useSsl);
             lock (_connectionPool)
             {
                 OpenConnection oldInfo;
@@ -42,12 +51,12 @@ namespace RestSharp.Portable.Socks
             }
         }
 
-        public OpenConnection GetOrCreateClient(SocksAddress address, bool useSsl)
+        internal OpenConnection GetOrCreateClient(SocksAddress address, bool useSsl)
         {
            return GetOrCreateClient(address, useSsl, DateTime.UtcNow);
         }
 
-        public OpenConnection GetOrCreateClient(SocksAddress address, bool useSsl, DateTime now)
+        internal OpenConnection GetOrCreateClient(SocksAddress address, bool useSsl, DateTime now)
         {
             lock (_connectionPool)
             {
@@ -71,7 +80,7 @@ namespace RestSharp.Portable.Socks
 #if SUPPORTS_NLOG
                 _logger.Debug("Pool: Create client (2): {0}", address);
 #endif
-                info = new OpenConnection(address, _factory.Create(address, useSsl));
+                info = new OpenConnection(address, Factory.Create(address, useSsl));
                 _connectionPool.Add(key, info);
                 return info;
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 #if WINRT
 using Windows.Networking;
@@ -13,7 +14,7 @@ namespace RestSharp.Portable.Socks
         public static bool IsLoopBackForIPv4(string ipv4)
         {
             var data = GetBytesForIPv4(ipv4);
-            return data[0] == 1 && data[3] == 127 && data[1] == 0 && data[2] == 0;
+            return data[3] == 1 && data[0] == 127 && data[1] == 0 && data[2] == 0;
         }
 
         public static bool IsLoopBackForIPv6(string ipv6)
@@ -123,7 +124,6 @@ namespace RestSharp.Portable.Socks
         public static byte[] GetBytesForIPv4(string ipv4)
         {
             var result = ipv4.Split('.').Select(byte.Parse)
-                .Reverse()
                 .ToArray();
             return result;
         }
@@ -147,8 +147,8 @@ namespace RestSharp.Portable.Socks
                 else
                 {
                     var d = GetBytesForIPv4(ipv4);
-                    data[6] = (ushort)((d[3] << 8) + d[2]);
-                    data[7] = (ushort)((d[1] << 8) + d[0]);
+                    data[6] = (ushort)((d[0] << 8) + d[1]);
+                    data[7] = (ushort)((d[2] << 8) + d[3]);
                 }
             }
             else

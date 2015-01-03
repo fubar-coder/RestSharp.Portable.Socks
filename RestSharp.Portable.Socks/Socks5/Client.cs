@@ -11,9 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using RestSharp.Portable.Socks.Socks5.Messages;
 using RestSharp.Portable.Socks.Socks5.Messages.Authentication;
-#if SUPPORTS_SSLSTREAM
-using System.Net.Security;
-#endif
 
 namespace RestSharp.Portable.Socks.Socks5
 {
@@ -63,7 +60,7 @@ namespace RestSharp.Portable.Socks.Socks5
                 // Do we need SSL?
                 _networkStream = _client.GetStream();
                 if (_useSsl)
-                    _networkStream = _tcpClientFactory.CreateSslStream(_networkStream, _destinationAddress.Host);
+                    _networkStream = await _tcpClientFactory.CreateSslStream(_networkStream, _destinationAddress.Host);
             }
             catch
             {

@@ -52,7 +52,7 @@ namespace RestSharp.Portable.Socks
         {
             Port = port;
             Host = address.ToString();
-            HostNameType = SocksUtilities.GetHostNameType(address);
+            HostNameType = address.GetHostNameType();
         }
 #endif
 
@@ -61,7 +61,7 @@ namespace RestSharp.Portable.Socks
         {
             Port = endPoint.Port;
             Host = endPoint.Address.ToString();
-            HostNameType = SocksUtilities.GetHostNameType(endPoint.Address);
+            HostNameType = endPoint.Address.GetHostNameType();
         }
 #endif
 
